@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example launchd job for the DCA bot (macOS). Fires the runner every 30 min;
+     the on-chain/broker interval gate (strategy.intervalSec) decides when a round is actually due.
+     Replace NODE_PATH and RUNNER_DIR, then:
+       launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.bug.pabal-dca-runner.plist -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.bug.pabal-dca-runner</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>NODE_PATH</string>
+    <string>RUNNER_DIR/runner.js</string>
+  </array>
+  <key>WorkingDirectory</key><string>RUNNER_DIR</string>
+  <key>StandardOutPath</key><string>/tmp/pabal-dca-runner.launchd.log</string>
+  <key>StandardErrorPath</key><string>/tmp/pabal-dca-runner.launchd.log</string>
+  <key>StartInterval</key><integer>1800</integer>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>

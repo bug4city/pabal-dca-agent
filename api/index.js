@@ -145,7 +145,22 @@ const ACTIONS = {
       throw new BadRequest("missing_context", "agentId/user not found in request", { got: ids });
     }
     const pos = await vaultPosition(Number(ids.agentId), ids.user);
-    return { agentId: Number(ids.agentId), user: ids.user, position: pos };
+    // 다음 회차 시각: 브로커가 context(lastExecutionAt + strategy.intervalSec)를 줄 때만 계산 가능
+    const nextDueAt = ids.lastExecutionAt && ids.intervalSec
+      ? new Date((Number(ids.lastExecutionAt) + Number(ids.intervalSec)) * 1000).toISOString()
+      : null;
+    return {
+      summary: [
+        `Vault balance: ${pos.usdtRemaining} USDT remaining, ${pos.dogeAccumulated} DOGE accumulated`,
+        `Per-round cap (on-chain): ${pos.onchainMaxPerExecution} USDT`,
+        nextDueAt ? `Next round executable after: ${nextDueAt}` : "Next round: after strategy interval since last execution",
+        "Withdraw returns the FULL position (USDT+DOGE) to your own address only.",
+      ],
+      agentId: Number(ids.agentId),
+      user: ids.user,
+      position: pos,
+      ...(nextDueAt ? { nextDueAt } : {}),
+    };
   },
 };
 
@@ -192,6 +207,8 @@ module.exports = async (req, res) => {
     agentId: pick(body.agentId, request.agentId, ctxObj.agentId),
     user: pick(body.user, request.user, ctxObj.user, body.userAddress, request.userAddress),
     strategyUsdt: ctxObj.strategy?.perExecutionUsdt,
+    intervalSec: ctxObj.strategy?.intervalSec,
+    lastExecutionAt: ctxObj.lastExecutionAt,
   };
   const action = request.action || body.action;
   const handler = ACTIONS[action];

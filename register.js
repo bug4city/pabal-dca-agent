@@ -201,7 +201,7 @@ async function api(p, body) {
     if (!state.agentId || !state.manifestHash || !state.txHash) throw new Error("run register first");
     const manifestRaw = fs.readFileSync(MANIFEST_FILE, "utf8");
     const deadline = Math.floor(Date.now() / 1000) + 300;
-    const domain = { name: "BOBOO Agent Registration", version: "1", chainId, verifyingContract: C.AgentRegistry };
+    const domain = { name: "Pabal Agent Registration", version: "1", chainId, verifyingContract: C.AgentRegistry };
     const signature = await wallet.signTypedData(domain, AGENT_REGISTRATION_TYPES, {
       agentId: state.agentId, manifestHash: state.manifestHash, deadline,
     });
@@ -227,7 +227,7 @@ async function api(p, body) {
     }
     state.manifestHash = newHash;
     const deadline = Math.floor(Date.now() / 1000) + 300;
-    const domain = { name: "BOBOO Agent Registration", version: "1", chainId, verifyingContract: C.AgentRegistry };
+    const domain = { name: "Pabal Agent Registration", version: "1", chainId, verifyingContract: C.AgentRegistry };
     const signature = await wallet.signTypedData(domain, AGENT_REGISTRATION_TYPES, {
       agentId: state.agentId, manifestHash: newHash, deadline,
     });
@@ -304,6 +304,7 @@ async function api(p, body) {
     const action = process.argv[3] || "dca.execute";
     const request = { action };
     if (process.argv[4] === "sim") request.simulate = "overheated";
+    else if (process.argv[4] === "demo") request.demoStep = true; // 간격 미도래여도 데모 1회 집행
     else if (process.argv[4]) request.usdtAmount = Number(process.argv[4]);
     const requestHash = ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(request)));
     const nonce = ethers.hexlify(ethers.randomBytes(32));

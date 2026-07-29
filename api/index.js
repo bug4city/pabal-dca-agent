@@ -5,7 +5,7 @@
 
 const SIGNAL_ENDPOINT = "https://pabal-signal-agent.vercel.app";
 const GIWA_RPC = "https://sepolia-rpc.giwa.io";
-const VAULT = "0xF1e14Aac9a2296221E47dD32Bb50A21eaC5Bb8f9"; // test.pabal.ai StrategyVault
+const VAULT = "0x6ad0bf49C4B2A275EdcD5B8567d92468b73F4450"; // test.pabal.ai StrategyVault
 const BASE_USDT = 5;      // 기본 회차 금액
 const MAX_USDT = 10;      // manifest maxUsdtPerTask와 일치 (온체인 maxPerExecution도 동일 설정)
 const STRATEGY =
